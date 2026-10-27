@@ -13,6 +13,9 @@ public class Test {
         capitals.put("nepal", "kathmandu");
         System.out.println(capitals);
 
+        // size check
+        System.out.println("size: " + capitals.size());
+
         // Contains check
         System.out.println(capitals.containsKey("china"));
 
