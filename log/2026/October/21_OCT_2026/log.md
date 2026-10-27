@@ -1,13 +1,12 @@
 ---
-date(dd-mm-yyyy): 21-10-2026
-username: "kdklearns"
-name: "Keshav Dutt Kaushik"
-work_model: "library"
+date: 21-10-2026
+author: "Keshav Dutt Kaushik"
+work model: "library"
 ---
 
 # 21<sup>st</sup> October 2026
 
-<img src="./report.png" width="500">
+<img src="./report.png" width="800">
 
 ## Neetcode 250
 - `Arrays & Hashing` - Revised few of the old problems, re-attempted them and drafted their approaches for future revists
