@@ -1,17 +1,20 @@
 package org.kdklearns.data_structures.hashmap.using_doubly_linked_list;
 
 public class MyHashMap<K, V> {
-    private int size = 16;
+    private int capacity;
+    private int length;
     private Node<K, V>[] bucket;
 
     public MyHashMap() {
-        bucket = new Node[size];
+        capacity = 16;
+        length = 0;
+        bucket = new Node[capacity];
     }
 
     private int getIndex(K key) {
         int h = key == null ? 0 : key.hashCode();
         int hash = h ^ (h >>> 16);
-        int index = hash & (size - 1);
+        int index = hash & (capacity - 1);
 
         return index;
     }
@@ -22,6 +25,7 @@ public class MyHashMap<K, V> {
         if (bucket[index] == null) {
             Node<K, V> head = new Node<>(key, value);
             bucket[index] = head;
+            length++;
             return;
         }
 
@@ -46,6 +50,7 @@ public class MyHashMap<K, V> {
         Node<K, V> newNode = new Node<>(key, value);
         mover.setNextNode(newNode);
         newNode.setPreviousNode(mover);
+        length++;
     }
 
     public V get(K key) {
@@ -56,7 +61,7 @@ public class MyHashMap<K, V> {
 
         Node<K, V> mover = bucket[index];
         V value = null;
-        while (mover.getNextNode() != null) {
+        while (mover != null) {
             if (mover.getKey().equals(key)) {
                 value = mover.getValue();
                 break;
@@ -96,12 +101,17 @@ public class MyHashMap<K, V> {
         if (mover.getKey().equals(key)) {
             removedValue = mover.getValue();
             Node<K, V> nextNode = mover.getNextNode();
+
+            // head is also the tail
             if (nextNode == null) {
                 bucket[index] = null;
+                length--;
                 return removedValue;
             }
+
             bucket[index] = nextNode;
             nextNode.setPreviousNode(null);
+            length--;
             return removedValue;
         }
 
@@ -115,11 +125,11 @@ public class MyHashMap<K, V> {
                 // tail removal
                 if (nextNode == null) {
                     previousNode.setNextNode(null);
-                    break;
+                } else {
+                    previousNode.setNextNode(nextNode);
+                    nextNode.setPreviousNode(previousNode);
                 }
-
-                previousNode.setNextNode(nextNode);
-                nextNode.setPreviousNode(previousNode);
+                length--;
                 break;
             }
             mover = mover.getNextNode();
@@ -128,8 +138,13 @@ public class MyHashMap<K, V> {
         return removedValue;
     }
 
+    public int size() {
+        return length;
+    }
+
     @Override
     public String toString() {
+        int count = 1;
         StringBuilder sb = new StringBuilder();
         sb.append("[");
 
@@ -140,9 +155,10 @@ public class MyHashMap<K, V> {
                 sb.append(mover.getKey());
                 sb.append(", ");
                 sb.append(mover.getValue());
-                sb.append("}, ");
+                sb.append(count != length ? "}, ": "}");
 
                 mover = mover.getNextNode();
+                count++;
             }
         }
         sb.append("]");
